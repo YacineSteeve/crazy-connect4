@@ -14,6 +14,9 @@ init: virtualenv requirements.txt
 run: init main.py
 	${PYTHON} main.py
 
+dev: main.py
+	${PYTHON} main.py
+
 clean:
 	rm -rf __pycache__
 	rm -rf ./.pytest_cache

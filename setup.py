@@ -6,21 +6,30 @@ VERSION = '0.0.0'
 DESCRIPTION = 'A relatively hard Connect 4 implementation (PvAI).'
 STATUS = '1 - Planning'
 PYTHON_VERSION_REQUIRED = '>=3.10'
-URL = ''
+URL = 'https://github.com/YacineSteeve/crazy-connect4'
 
-HERE = os.path.dirname(__file__)
+
+def path_to(f: str) -> str:
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), f))
+
 
 try:
-    with open(os.path.abspath(os.path.join(HERE, 'README.md')), 'r', encoding='utf-8') as file:
+    with open(path_to('README.md'), 'r', encoding='utf-8') as file:
         README = '\n' + file.read()
 except FileNotFoundError:
     README = DESCRIPTION
 
 try:
-    with open(os.path.abspath(os.path.join(HERE, 'LICENSE')), 'r', encoding='utf-8') as file:
+    with open(path_to('LICENSE'), 'r', encoding='utf-8') as file:
         LICENSE = '\n' + file.read()
 except FileNotFoundError:
     LICENSE = 'MIT License'
+
+try:
+    with open(path_to('requirements.txt'), 'r', encoding='utf-8') as file:
+        REQUIREMENTS = [package.strip() for package in file.readlines()]
+except FileNotFoundError:
+    REQUIREMENTS = []
 
 setup(
     name=PACKAGE_NAME,
@@ -35,6 +44,7 @@ setup(
     license=LICENSE,
     scripts=['main.py'],
     packages=find_packages(exclude=('tests',)),
+    install_requires=REQUIREMENTS,
     classifiers=[
         f'Development Status :: {STATUS}',
         'Programming Language :: Python :: 3',
