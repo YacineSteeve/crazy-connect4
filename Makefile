@@ -1,4 +1,4 @@
-.PHONY: virtualenv deps run test clean
+.PHONY: virtualenv init run dev clean test
 
 VENV = venv
 PYTHON = ${VENV}/bin/python3
@@ -22,6 +22,6 @@ clean:
 	rm -rf ./.pytest_cache
 #	rm -rf ${VENV}
 
-test: init tests
-	pytest --cache-clear
+test: tests
+	pytest --cache-clear --verbosity=1
 	make clean
