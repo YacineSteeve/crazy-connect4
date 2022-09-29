@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from src.logger import SettingError
+from src.logger import logger
 from typing import Tuple
 
 

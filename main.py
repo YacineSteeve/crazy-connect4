@@ -1,15 +1,18 @@
 import sys
-
-
-from src import config
 import tkinter as tk
 
-if __name__ == '__main__':
-    PYTHON_MIN_VERSION: tuple = (3, 10)
+from src import config
+from src.logger import logger
 
-    if sys.version_info[0:2] < PYTHON_MIN_VERSION:
-        sys.exit('Python version too old')
+if __name__ == '__main__':
+    PYTHON_MIN_VERSION: tuple = (3, 11)
+    PYTHON_CURRENT_VERSION: tuple = sys.version_info[0:2]
+
+    if PYTHON_CURRENT_VERSION < PYTHON_MIN_VERSION:
+        logger.critical("Python version too old to run the app.")
+        logger.debug("Exit.")
+        sys.exit()
 
     settings = config.Settings(1.1)
 
-    print("ok")
+    logger.info("ok")
