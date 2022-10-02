@@ -39,16 +39,16 @@ class CustomLogger(logging.Logger):
         super().__init__(name, logging.DEBUG)
 
         console_handler = logging.StreamHandler()
-        file_handler = logging.FileHandler(LOG_FILE, encoding='utf-8')
+        # file_handler = logging.FileHandler(LOG_FILE, encoding='utf-8')
 
         console_formatter = CustomFormatter(colored=True)
-        file_formatter = CustomFormatter(colored=False)
+        # file_formatter = CustomFormatter(colored=False)
 
         console_handler.setFormatter(console_formatter)
-        file_handler.setFormatter(file_formatter)
+        # file_handler.setFormatter(file_formatter)
 
         self.addHandler(console_handler)
-        self.addHandler(file_handler)
+        # self.addHandler(file_handler)
 
 
 logging.setLoggerClass(CustomLogger)
