@@ -1,15 +1,15 @@
 from typing import Tuple
-from random import choice
 
 
 class Token:
-    def __init__(self, board, player=None):
+    def __init__(self, board, player):
         self.board = board
         self.player = player
 
-    def draw(self, center: Tuple[int, int], radius: int):
-        self.board.create_oval(center[0] - radius,
-                               center[1] - radius,
-                               center[0] + radius,
-                               center[1] + radius,
-                               fill=choice(self.board.settings.token_colors))
+    def draw(self, center: Tuple[int, int], radius: int) -> int:
+        widget_id = self.board.create_oval(center[0] - radius,
+                                           center[1] - radius,
+                                           center[0] + radius,
+                                           center[1] + radius,
+                                           fill=self.player.color)
+        return widget_id

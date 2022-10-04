@@ -3,6 +3,8 @@ import sys
 from src import config
 from src.logger import logger
 from src.models.window import Window
+from src.models.player import HumanPlayer
+from src import game
 
 if __name__ == '__main__':
     logger.info("Start App")
@@ -20,5 +22,10 @@ if __name__ == '__main__':
     logger.info(f'{settings}')
 
     window = Window(settings)
+
+    player_1 = HumanPlayer("Yacine", settings.token_colors[0], window)
+    player_2 = HumanPlayer("Khaled", settings.token_colors[1], window)
+
+    game.PLAYERS = [player_1, player_2]
 
     window.run()

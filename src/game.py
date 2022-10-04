@@ -1,0 +1,5 @@
+PLAYERS = []
+
+CURRENT_TURN = 0
+
+FILLED_BOXES = {}

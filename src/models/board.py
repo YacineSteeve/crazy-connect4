@@ -3,6 +3,7 @@ from typing import Tuple
 
 from src.logger import logger
 from src.models.token import Token
+from src import game
 
 
 def middle(point_1: Tuple[int, int], point_2: Tuple[int, int]) -> Tuple[int, int]:
@@ -11,7 +12,6 @@ def middle(point_1: Tuple[int, int], point_2: Tuple[int, int]) -> Tuple[int, int
 
 class Board(tk.Canvas):
     BOX_INNER_SCALE = 0.8
-    FILLED_BOXES = {}
 
     def __init__(self, window, settings):
         self.window = window
@@ -38,7 +38,7 @@ class Board(tk.Canvas):
 
         self.create_grid()
 
-        self.bind('<Button-1>', self.insert_token)
+        self.bind('<Button-1>', self.at_human_player_click)
 
         if self.window.is_landscape:
             self.place(x=int(self.window.width * self.window.BOARD_POS_X_SCALE_REL_TO_WIDTH),
@@ -91,24 +91,31 @@ class Board(tk.Canvas):
 
         logger.info("Grid created")
 
-    def insert_token(self, event):
-        box_index_x = event.x // self.box_size
+    def at_human_player_click(self, event) -> None:
+        col = event.x // self.box_size
+        player = game.PLAYERS[game.CURRENT_TURN]
+        self.insert_token(player, col)
 
-        if box_index_x not in self.FILLED_BOXES:
-            self.FILLED_BOXES[box_index_x] = [self.rows_number]
+    def insert_token(self, player, box_index_x: int) -> None:
 
-        last_box_y = self.FILLED_BOXES[box_index_x][-1]
+        if box_index_x not in game.FILLED_BOXES:
+            game.FILLED_BOXES[box_index_x] = [self.rows_number]
+
+        last_box_y = game.FILLED_BOXES[box_index_x][-1]
 
         if last_box_y == 0:
-            logger.debug("No token inserted")
+            logger.debug(f'{player.name} ({player.color}): No token inserted')
         else:
             box_index_y = last_box_y - 1
 
             _, _, _, _, center = self.box_vertices(box_index_x, box_index_y)
 
-            token = Token(self)
+            token = Token(self, player)
             token.draw(center, self.token_radius)
 
-            self.FILLED_BOXES[box_index_x].append(box_index_y)
+            game.FILLED_BOXES[box_index_x].append(box_index_y)
 
-            logger.debug(f'Token inserted at column {box_index_x + 1} line {last_box_y}')
+            game.CURRENT_TURN = not game.CURRENT_TURN
+
+            logger.debug(f'{player.name} ({player.color}) move: '
+                         f'column {box_index_x + 1} line {last_box_y}')
