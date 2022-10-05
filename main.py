@@ -2,6 +2,7 @@ import sys
 
 from src import config
 from src.logger import logger
+from src.models.popup import GameModePopUp
 from src.models.window import Window
 from src.models.player import HumanPlayer
 from src import game
@@ -20,6 +21,9 @@ if __name__ == '__main__':
     settings = config.Settings()
     logger.debug("Game settings initialised")
     logger.info(f'{settings}')
+
+    popup = GameModePopUp(settings)
+    popup.show()
 
     window = Window(settings)
 

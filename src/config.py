@@ -4,6 +4,15 @@ from dataclasses import dataclass
 
 from src.logger import logger
 
+TITLE_POS_Y_SCALE_REL_TO_HEIGHT = 0.05
+TITLE_HEIGHT_SCALE_REL_TO_HEIGHT = 2 * TITLE_POS_Y_SCALE_REL_TO_HEIGHT
+TITLE_WIDTH_SCALE_REL_TO_WIDTH = 0.45
+TITLE_POS_X_SCALE_REL_TO_WIDTH = (1 - TITLE_WIDTH_SCALE_REL_TO_WIDTH) / 2
+
+BOARD_POS_X_SCALE_REL_TO_WIDTH = 0.05
+BOARD_POS_Y_SCALE_REL_TO_HEIGHT = TITLE_HEIGHT_SCALE_REL_TO_HEIGHT + (2 * TITLE_POS_Y_SCALE_REL_TO_HEIGHT)
+BOARD_SIZE_SCALE = 1 - TITLE_HEIGHT_SCALE_REL_TO_HEIGHT - (3 * TITLE_POS_Y_SCALE_REL_TO_HEIGHT)
+
 
 class SettingError(Exception):
     pass
@@ -15,6 +24,8 @@ class Settings:
     board_rows_number: int = 6
     board_color: str = "blue"
     board_border_thickness: int = 4
+    popup_geometry_scale: float = 0.5
+    window_geometry_scale: float = 0.8
     window_title: str = "Crazy Connect 4"
     window_color: str = "darkgrey"
     token_colors: Tuple[str, ...] = ("yellow", "red")

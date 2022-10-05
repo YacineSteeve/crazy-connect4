@@ -1,6 +1,3 @@
-from src.logger import logger
-
-
 class Player:
     def __init__(self, name: str, color: str, window):
         self.name = name

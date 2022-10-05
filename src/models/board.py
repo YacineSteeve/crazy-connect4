@@ -3,7 +3,7 @@ from typing import Tuple
 
 from src.logger import logger
 from src.models.token import Token
-from src import game
+from src import game, config
 
 
 def middle(point_1: Tuple[int, int], point_2: Tuple[int, int]) -> Tuple[int, int]:
@@ -13,13 +13,12 @@ def middle(point_1: Tuple[int, int], point_2: Tuple[int, int]) -> Tuple[int, int
 class Board(tk.Canvas):
     BOX_INNER_SCALE = 0.8
 
-    def __init__(self, window, settings):
+    def __init__(self, window):
         self.window = window
-        self.color = settings.board_color
-        self.settings = settings
-        self.border_thickness = settings.board_border_thickness
-        self.columns_number = settings.board_columns_number
-        self.rows_number = settings.board_rows_number
+        self.color = window.settings.board_color
+        self.border_thickness = window.settings.board_border_thickness
+        self.columns_number = window.settings.board_columns_number
+        self.rows_number = window.settings.board_rows_number
 
         size = self.size
         self.width = size[0]
@@ -34,32 +33,31 @@ class Board(tk.Canvas):
                          background=self.color,
                          highlightthickness=self.border_thickness,
                          highlightbackground='black',
-                         relief='sunken')
+                         relief='raised')
 
         self.create_grid()
 
         self.bind('<Button-1>', self.at_human_player_click)
 
         if self.window.is_landscape:
-            self.place(x=int(self.window.width * self.window.BOARD_POS_X_SCALE_REL_TO_WIDTH),
-                       y=int(self.window.height * self.window.BOARD_POS_Y_SCALE_REL_TO_HEIGHT))
+            self.place(x=int(self.window.width * config.BOARD_POS_X_SCALE_REL_TO_WIDTH),
+                       y=int(self.window.height * config.BOARD_POS_Y_SCALE_REL_TO_HEIGHT))
         else:
             ...
 
         logger.debug("Board initialized")
+        logger.info(f'Board size: {self.width}x{self.height}')
 
     @property
     def size(self) -> Tuple[int, int]:
         if self.window.is_landscape:
-            pre_height = int(self.window.height * self.window.BOARD_SIZE_SCALE)
+            pre_height = int(self.window.height * config.BOARD_SIZE_SCALE)
             height = pre_height - (pre_height % self.rows_number)
             width = (height // self.rows_number) * self.columns_number
         else:
-            pre_width = int(self.window.width * self.window.BOARD_SIZE_SCALE)
+            pre_width = int(self.window.width * config.BOARD_SIZE_SCALE)
             width = pre_width - (pre_width % self.columns_number)
             height = (width // self.columns_number) * self.rows_number
-
-        logger.info(f'Board size: {width}x{height}')
 
         return width, height
 
@@ -69,6 +67,7 @@ class Board(tk.Canvas):
         x_1 = self.border_thickness + ((index_x + 1) * self.box_size)
         y_1 = self.border_thickness + ((index_y + 1) * self.box_size)
         center = middle((x_0, y_0), (x_1, y_1))
+
         return x_0, y_0, x_1, y_1, center
 
     def create_grid(self) -> None:
@@ -89,15 +88,12 @@ class Board(tk.Canvas):
                                  center[1] + self.token_radius,
                                  fill='white')
 
-        logger.info("Grid created")
-
     def at_human_player_click(self, event) -> None:
         col = event.x // self.box_size
         player = game.PLAYERS[game.CURRENT_TURN]
         self.insert_token(player, col)
 
     def insert_token(self, player, box_index_x: int) -> None:
-
         if box_index_x not in game.FILLED_BOXES:
             game.FILLED_BOXES[box_index_x] = [self.rows_number]
 
