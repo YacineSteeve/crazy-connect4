@@ -13,5 +13,5 @@ class HumanPlayer(Player):
 
 class AIPlayer(Player):
     def __init__(self, ai, color: str, window):
-        super().__init__(ai.name, color, window)
+        super().__init__(ai, color, window)
         ...

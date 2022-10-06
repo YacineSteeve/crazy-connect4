@@ -3,6 +3,7 @@ from typing import Tuple
 
 from src.logger import logger
 from src.models.token import Token
+from src.models.player import HumanPlayer
 from src import game, config
 
 
@@ -91,9 +92,14 @@ class Board(tk.Canvas):
     def at_human_player_click(self, event) -> None:
         col = event.x // self.box_size
         player = game.PLAYERS[game.CURRENT_TURN]
-        self.insert_token(player, col)
+        if isinstance(player, HumanPlayer):
+            insertion_ok = self.insert_token(player, col)
+            if insertion_ok:
+                game.CURRENT_TURN = not game.CURRENT_TURN
 
-    def insert_token(self, player, box_index_x: int) -> None:
+    def insert_token(self, player, box_index_x: int) -> bool:
+        inserted = False
+
         if box_index_x not in game.FILLED_BOXES:
             game.FILLED_BOXES[box_index_x] = [self.rows_number]
 
@@ -111,7 +117,9 @@ class Board(tk.Canvas):
 
             game.FILLED_BOXES[box_index_x].append(box_index_y)
 
-            game.CURRENT_TURN = not game.CURRENT_TURN
+            inserted = True
 
             logger.debug(f'{player.name} ({player.color}) move: '
                          f'column {box_index_x + 1} line {last_box_y}')
+
+        return inserted
