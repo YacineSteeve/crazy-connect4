@@ -5,6 +5,7 @@ from src.logger import logger
 from src.models.popup import GameModePopUp
 from src.models.window import Window
 from src.models.player import HumanPlayer, AIPlayer
+from src.models.ai import RandomAI
 from src import game
 
 if __name__ == '__main__':
@@ -19,6 +20,7 @@ if __name__ == '__main__':
         sys.exit()
 
     settings = config.Settings()
+    game.SETTINGS = settings
     logger.debug("Game settings initialised")
     logger.info(f'{settings}')
 
@@ -36,7 +38,7 @@ if __name__ == '__main__':
                                color=settings.token_colors[not game.MODE.get('player_color_id', 0)],
                                window=window)
     else:
-        player_2 = AIPlayer(ai='ai',
+        player_2 = AIPlayer(ai=RandomAI(),
                             color=settings.token_colors[not game.MODE.get('player_color_id', 0)],
                             window=window)
 

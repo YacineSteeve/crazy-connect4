@@ -3,12 +3,8 @@ from typing import Tuple
 
 from src.logger import logger
 from src.models.token import Token
-from src.models.player import HumanPlayer
-from src import game, config
-
-
-def middle(point_1: Tuple[int, int], point_2: Tuple[int, int]) -> Tuple[int, int]:
-    return (point_2[0] + point_1[0]) // 2, (point_2[1] + point_1[1]) // 2
+from src.models.player import HumanPlayer, AIPlayer
+from src import game, config, utils
 
 
 class Board(tk.Canvas):
@@ -38,8 +34,6 @@ class Board(tk.Canvas):
 
         self.create_grid()
 
-        self.bind('<Button-1>', self.at_human_player_click)
-
         if self.window.is_landscape:
             self.place(x=int(self.window.width * config.BOARD_POS_X_SCALE_REL_TO_WIDTH),
                        y=int(self.window.height * config.BOARD_POS_Y_SCALE_REL_TO_HEIGHT))
@@ -67,7 +61,7 @@ class Board(tk.Canvas):
         y_0 = self.border_thickness + (index_y * self.box_size)
         x_1 = self.border_thickness + ((index_x + 1) * self.box_size)
         y_1 = self.border_thickness + ((index_y + 1) * self.box_size)
-        center = middle((x_0, y_0), (x_1, y_1))
+        center = utils.middle((x_0, y_0), (x_1, y_1))
 
         return x_0, y_0, x_1, y_1, center
 
@@ -92,10 +86,23 @@ class Board(tk.Canvas):
     def at_human_player_click(self, event) -> None:
         col = event.x // self.box_size
         player = game.PLAYERS[game.CURRENT_TURN]
+
         if isinstance(player, HumanPlayer):
             insertion_ok = self.insert_token(player, col)
             if insertion_ok:
-                game.CURRENT_TURN = not game.CURRENT_TURN
+                self.switch_turn()
+
+        self.window.after(2000, self.next_move)
+
+    def next_move(self):
+        player = game.PLAYERS[game.CURRENT_TURN]
+        if isinstance(player, AIPlayer):
+            self.insert_token(player, player.move())
+            self.switch_turn()
+
+    def switch_turn(self):
+        game.CURRENT_TURN = not game.CURRENT_TURN
+        self.turn_highlight()
 
     def insert_token(self, player, box_index_x: int) -> bool:
         inserted = False
@@ -123,3 +130,11 @@ class Board(tk.Canvas):
                          f'column {box_index_x + 1} line {last_box_y}')
 
         return inserted
+
+    def turn_highlight(self):
+        players = {
+            0: self.window.label_player_1,
+            1: self.window.label_player_2
+        }
+        players[game.CURRENT_TURN].configure(background='green')
+        players[not game.CURRENT_TURN].configure(background=self.window.default_bg_color)

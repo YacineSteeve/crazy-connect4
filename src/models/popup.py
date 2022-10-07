@@ -43,7 +43,7 @@ class GameModePopUp(tk.Tk):
         default_font_size = font.nametofont('TkDefaultFont').cget('size')
 
         question = tk.Label(self.frame,
-                            text="Welcome! Choose the game mode, please",
+                            text="Welcome!",
                             font=('TkDefaultFont', int(default_font_size * 1.2)),
                             background=settings.window_color)
 

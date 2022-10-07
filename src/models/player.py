@@ -1,17 +1,16 @@
-class Player:
-    def __init__(self, name: str, color: str, window):
-        self.name = name
+class HumanPlayer:
+    def __init__(self, player_name: str, color: str, window):
+        self.name = player_name[:15]
         self.color = color
         self.window = window
 
 
-class HumanPlayer(Player):
-    def __init__(self, player_name: str, color: str, window):
-        super().__init__(player_name, color, window)
-        ...
-
-
-class AIPlayer(Player):
+class AIPlayer:
     def __init__(self, ai, color: str, window):
-        super().__init__(ai, color, window)
-        ...
+        self.ai = ai
+        self.name = ai.name[:15]
+        self.color = color
+        self.window = window
+
+    def move(self) -> int:
+        return self.ai.move()

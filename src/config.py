@@ -25,7 +25,7 @@ class Settings:
     board_color: str = "blue"
     board_border_thickness: int = 4
     popup_geometry_scale: float = 0.5
-    window_geometry_scale: float = 0.8
+    window_geometry_scale: float = 0.5
     window_title: str = "Crazy Connect 4"
     window_color: str = "darkgrey"
     token_colors: Tuple[str, ...] = ("yellow", "red")

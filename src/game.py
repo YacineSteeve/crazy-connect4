@@ -1,3 +1,7 @@
+from src import config
+
+SETTINGS = config.Settings()
+
 PLAYERS = []
 
 CURRENT_TURN = 0
