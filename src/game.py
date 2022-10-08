@@ -1,6 +1,4 @@
-from src import config
-
-SETTINGS = config.Settings()
+SETTINGS = -1
 
 PLAYERS = []
 

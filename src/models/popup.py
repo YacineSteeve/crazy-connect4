@@ -8,11 +8,11 @@ from src import game, config
 
 
 class GameModePopUp(tk.Tk):
-    def __init__(self, settings):
+    def __init__(self):
         super().__init__()
 
-        self.settings = settings
-        self.geometry_scale = settings.popup_geometry_scale
+        self.settings = game.SETTINGS
+        self.geometry_scale = self.settings.popup_geometry_scale
         self.pad = int(self.height * config.TITLE_POS_Y_SCALE_REL_TO_HEIGHT)
         self.grid_pad_x = self.pad // 2
         self.player_name = tk.StringVar()
@@ -21,7 +21,7 @@ class GameModePopUp(tk.Tk):
         self.player_color = tk.IntVar()
 
         self.title("Game mode")
-        self.configure(background=settings.window_color)
+        self.configure(background=self.settings.window_color)
         self.geometry(f'{self.width}x{self.height}')
         self.resizable(False, False)
         self.protocol('WM_DELETE_WINDOW', self.on_exit)
@@ -31,7 +31,7 @@ class GameModePopUp(tk.Tk):
         header = Header(self)
         header.set()
 
-        self.frame = tk.Frame(self, background=settings.window_color)
+        self.frame = tk.Frame(self, background=self.settings.window_color)
         self.frame.place(relx=(1 - config.TITLE_WIDTH_SCALE_REL_TO_WIDTH) / 2,
                          rely=(2 * config.TITLE_HEIGHT_SCALE_REL_TO_HEIGHT),
                          relheight=(1 - 2.25 * config.TITLE_HEIGHT_SCALE_REL_TO_HEIGHT),
@@ -45,18 +45,18 @@ class GameModePopUp(tk.Tk):
         question = tk.Label(self.frame,
                             text="Welcome!",
                             font=('TkDefaultFont', int(default_font_size * 1.2)),
-                            background=settings.window_color)
+                            background=self.settings.window_color)
 
         question.grid(row=0, column=0, columnspan=3, sticky='ew', pady=self.pad)
 
-        ask_player_name = tk.Label(self.frame, text="Your name :", background=settings.window_color)
+        ask_player_name = tk.Label(self.frame, text="Your name :", background=self.settings.window_color)
         ask_player_name.grid(row=1, column=0, sticky='w', padx=self.grid_pad_x, pady=self.grid_pad_x)
 
         player_name_entry = tk.Entry(self.frame, textvariable=self.player_name)
         player_name_entry.grid(row=1, column=1, sticky='e', pady=self.grid_pad_x)
         player_name_entry.focus_set()
 
-        ask_opponent = tk.Label(self.frame, text="Play against :", background=settings.window_color)
+        ask_opponent = tk.Label(self.frame, text="Play against :", background=self.settings.window_color)
         ask_opponent.grid(row=2, column=0, sticky='w', padx=self.grid_pad_x, pady=self.grid_pad_x)
 
         entry_width = player_name_entry.cget('width')
@@ -94,21 +94,21 @@ class GameModePopUp(tk.Tk):
 
         color_1 = tk.Radiobutton(self.frame,
                                  variable=self.player_color,
-                                 text=settings.token_colors[0].title(),
+                                 text=self.settings.token_colors[0].title(),
                                  value=0,
-                                 background=settings.window_color,
-                                 activebackground=settings.token_colors[0],
-                                 highlightbackground=settings.window_color)
+                                 background=self.settings.window_color,
+                                 activebackground=self.settings.token_colors[0],
+                                 highlightbackground=self.settings.window_color)
         color_1.select()
         color_1.grid(row=5, column=0, sticky='ew', pady=self.grid_pad_x)
 
         color_2 = tk.Radiobutton(self.frame,
                                  variable=self.player_color,
-                                 text=settings.token_colors[1].title(),
+                                 text=self.settings.token_colors[1].title(),
                                  value=1,
-                                 background=settings.window_color,
-                                 activebackground=settings.token_colors[1],
-                                 highlightbackground=settings.window_color)
+                                 background=self.settings.window_color,
+                                 activebackground=self.settings.token_colors[1],
+                                 highlightbackground=self.settings.window_color)
         color_2.grid(row=5, column=1, sticky='ew', padx=self.grid_pad_x, pady=self.grid_pad_x)
 
         save_button = ttk.Button(self.frame,

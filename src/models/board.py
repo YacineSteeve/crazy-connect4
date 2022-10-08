@@ -12,10 +12,10 @@ class Board(tk.Canvas):
 
     def __init__(self, window):
         self.window = window
-        self.color = window.settings.board_color
-        self.border_thickness = window.settings.board_border_thickness
-        self.columns_number = window.settings.board_columns_number
-        self.rows_number = window.settings.board_rows_number
+        self.color = game.SETTINGS.board_color
+        self.border_thickness = game.SETTINGS.board_border_thickness
+        self.columns_number = game.SETTINGS.board_columns_number
+        self.rows_number = game.SETTINGS.board_rows_number
 
         size = self.size
         self.width = size[0]

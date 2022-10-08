@@ -1,23 +1,23 @@
 import tkinter as tk
 from tkinter import font
 
-from src import config
+from src import game, config
 
 
 class Header(tk.Label):
     def __init__(self, window):
         self.window = window
 
-        text_font = font.Font(family=window.settings.font_family,
+        text_font = font.Font(family=game.SETTINGS.font_family,
                               size=int(window.height * 0.05),
                               weight='bold')
 
         super().__init__(window,
-                         text=window.settings.window_title,
+                         text=game.SETTINGS.window_title,
                          font=text_font,
                          justify='left',
                          anchor='center',
-                         background=window.settings.window_color,
+                         background=game.SETTINGS.window_color,
                          compound='center')
 
     def set(self) -> None:

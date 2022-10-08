@@ -1,7 +1,7 @@
-import sys
 from typing import Tuple
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 
+from src import game
 from src.logger import logger
 
 TITLE_POS_Y_SCALE_REL_TO_HEIGHT = 0.05
@@ -18,7 +18,7 @@ class SettingError(Exception):
     pass
 
 
-@dataclass(init=True, frozen=True)
+@dataclass(init=True)
 class Settings:
     board_columns_number: int = 7
     board_rows_number: int = 6
@@ -35,23 +35,19 @@ class Settings:
     def get_number_of_boxes(self) -> int:
         return self.board_columns_number * self.board_rows_number
 
-    def __post_init__(self):
-        expected = {
-            'board_columns_number': int,
-            'board_rows_number': int,
-            'board_color': str,
-            'board_border_thickness': int,
-            'window_title': str,
-            'window_color': str,
-            'token_colors': tuple,
-            'font_family': str,
-        }
+    def save(self):
+        wrong_setting = False
 
-        for attribute, attr_type in expected.items():
-            if not isinstance(getattr(self, attribute), attr_type):
+        for field in fields(self):
+            if not isinstance(getattr(self, field.name), type(field.default)):
+                wrong_setting = True
+                setattr(self, field.name, field.default)
                 try:
                     raise SettingError()
                 except SettingError:
-                    logger.error(f'Wrong setting type: "{attribute}" must be {attr_type}')
-                    logger.debug("Exit App")
-                    sys.exit()
+                    logger.error(f'Wrong setting type: "{field.name}" must be {field.type}')
+
+        if wrong_setting:
+            logger.warning("Default settings will be used")
+
+        game.SETTINGS = self

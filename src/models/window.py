@@ -9,11 +9,11 @@ from src.models.token import Token
 
 
 class Window(tk.Tk):
-    def __init__(self, settings):
+    def __init__(self):
         super().__init__()
 
-        self.settings = settings
-        self.geometry_scale = settings.window_geometry_scale
+        self.settings = game.SETTINGS
+        self.geometry_scale = self.settings.window_geometry_scale
         self.is_landscape = self.winfo_screenwidth() > self.winfo_screenheight()
         self.label_player_height = int(self.height * config.TITLE_HEIGHT_SCALE_REL_TO_HEIGHT)
         self.label_player_pad_x = int(self.width * 0.05)
@@ -21,8 +21,8 @@ class Window(tk.Tk):
         self.default_bg_color = self.cget('bg')
         self.rel_width = 1 - config.BOARD_SIZE_SCALE + 2 * config.BOARD_POS_X_SCALE_REL_TO_WIDTH
 
-        self.title(settings.window_title)
-        self.configure(background=settings.window_color)
+        self.title(self.settings.window_title)
+        self.configure(background=self.settings.window_color)
         self.geometry(f'{self.width}x{self.height}')
         self.resizable(False, False)
         self.protocol('WM_DELETE_WINDOW', self.on_exit)
@@ -33,7 +33,7 @@ class Window(tk.Tk):
 
         self.board = Board(self)
 
-        self.frame = tk.Frame(self, background=settings.window_color)
+        self.frame = tk.Frame(self, background=self.settings.window_color)
         self.frame.place(relx=(config.BOARD_SIZE_SCALE - 3 * config.BOARD_POS_X_SCALE_REL_TO_WIDTH),
                          rely=config.BOARD_POS_Y_SCALE_REL_TO_HEIGHT,
                          relwidth=self.rel_width,
@@ -51,8 +51,8 @@ class Window(tk.Tk):
 
         versus = tk.Label(self.frame,
                           text='VS',
-                          font=(settings.font_family, 2 * self.normal_font[1], 'bold'),
-                          background=settings.window_color)
+                          font=(self.settings.font_family, 2 * self.normal_font[1], 'bold'),
+                          background=self.settings.window_color)
         versus.grid(row=1, column=0, columnspan=2, sticky='ew')
 
         self.label_player_2 = tk.Canvas(self.frame, height=self.label_player_height)

@@ -20,26 +20,27 @@ if __name__ == '__main__':
         sys.exit()
 
     settings = config.Settings()
-    game.SETTINGS = settings
-    logger.debug("Game settings initialised")
-    logger.info(f'{settings}')
+    settings.save()
 
-    popup = GameModePopUp(settings)
+    logger.debug("Game settings initialised")
+    logger.info(f'{game.SETTINGS}')
+
+    popup = GameModePopUp()
     popup.show()
 
-    window = Window(settings)
+    window = Window()
 
     player_1 = HumanPlayer(player_name=game.MODE.get('player_1', 'Player 1'),
-                           color=settings.token_colors[game.MODE.get('player_color_id', 0)],
+                           color=game.SETTINGS.token_colors[game.MODE.get('player_color_id', 0)],
                            window=window)
 
     if game.MODE.get('player_2') == 'human':
         player_2 = HumanPlayer(player_name=game.MODE.get('human_opponent_name', 'Player 2'),
-                               color=settings.token_colors[not game.MODE.get('player_color_id', 0)],
+                               color=game.SETTINGS.token_colors[not game.MODE.get('player_color_id', 0)],
                                window=window)
     else:
         player_2 = AIPlayer(ai=RandomAI(),
-                            color=settings.token_colors[not game.MODE.get('player_color_id', 0)],
+                            color=game.SETTINGS.token_colors[not game.MODE.get('player_color_id', 0)],
                             window=window)
 
     game.PLAYERS = [player_1, player_2]
