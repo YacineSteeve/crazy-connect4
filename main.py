@@ -45,4 +45,9 @@ if __name__ == '__main__':
 
     game.PLAYERS = [player_1, player_2]
 
+    game.BOXES_MATRIX = [
+        [game.EMPTY for _ in range(game.SETTINGS.board_columns_number)]
+        for _ in range(game.SETTINGS.board_rows_number)
+    ]
+
     window.run()

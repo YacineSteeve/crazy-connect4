@@ -15,7 +15,7 @@ run: init main.py
 	${PYTHON} main.py
 
 dev: main.py
-	${PYTHON} main.py
+	clear; ${PYTHON} main.py
 
 clean:
 	rm -rf __pycache__

@@ -92,7 +92,7 @@ class Board(tk.Canvas):
             if insertion_ok:
                 self.switch_turn()
 
-        self.window.after(2000, self.next_move)
+        self.window.after(200, self.next_move)
 
     def next_move(self):
         player = game.PLAYERS[game.CURRENT_TURN]
@@ -120,11 +120,16 @@ class Board(tk.Canvas):
             _, _, _, _, center = self.box_vertices(box_index_x, box_index_y)
 
             token = Token(self, player)
-            token.draw(center, self.token_radius)
+            game.BOXES_MATRIX[box_index_y][box_index_x] = token.draw(center, self.token_radius)
 
             game.FILLED_BOXES[box_index_x].append(box_index_y)
 
+            game.TOKENS_NUMBER += 1
+
             inserted = True
+
+            if game.TOKENS_NUMBER >= 7:
+                game.find_four()
 
             logger.debug(f'{player.name} ({player.color}) move: '
                          f'column {box_index_x + 1} line {last_box_y}')
