@@ -50,4 +50,6 @@ if __name__ == '__main__':
         for _ in range(game.SETTINGS.board_rows_number)
     ]
 
+    game.IS_PLAYING = True
+
     window.run()

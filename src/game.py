@@ -1,7 +1,6 @@
 import re
 from typing import Union, Tuple, List
 
-from src.logger import logger
 from src import utils
 
 SETTINGS = None
@@ -11,6 +10,8 @@ PLAYERS = []
 CURRENT_TURN = 0
 
 TOKENS_NUMBER = 0
+
+IS_PLAYING = False
 
 FILLED_BOXES = {}
 
@@ -28,16 +29,14 @@ MODE = {
 WIN_PATTERNS = ['0000', '1111']
 
 
-def four_in(seq: List[int]) -> Union[bool, Tuple[bool, str, str]]:
-    joined_row = ''.join(map(str, seq))
+def find_four_in(matrix: List[List[int]]) -> Union[Tuple[int, str], None]:
+    for seq in matrix:
+        joined_seq = ''.join(map(str, seq))
 
-    for pattern in WIN_PATTERNS:
-        result = re.findall(pattern, joined_row)
-        if result:
-            position = joined_row.index(result[0])
-            return True, result[0], joined_row
-
-    return False
+        for pattern in WIN_PATTERNS:
+            result = re.findall(pattern, joined_seq)
+            if result:
+                return int(result[0][0]), joined_seq
 
 
 def min_four_diags(matrix: List[List[int]]) -> List[List[int]]:
@@ -85,30 +84,15 @@ def min_four_diags(matrix: List[List[int]]) -> List[List[int]]:
     return diags
 
 
-def find_four() -> Union[bool, Tuple[bool, int]]:
+def find_four() -> Union[Tuple[int, str], None]:
     reduced_matrix = list(filter(lambda r: any(map(lambda x: x != EMPTY, r)), BOXES_MATRIX))
 
-    for row in reduced_matrix:
-        res = four_in(row)
-        if res:
-            logger.debug(f'Row : {res}')
-            break
+    found = find_four_in(reduced_matrix)
 
-    if len(reduced_matrix) >= 4:
-        for col in utils.transpose(reduced_matrix):
-            res = four_in(col)
-            if res:
-                logger.debug(f'Col : {res}')
-                break
+    if found is None and len(reduced_matrix) >= 4:
+        found = find_four_in(utils.transpose(reduced_matrix))
 
-        for diag in min_four_diags(reduced_matrix):
-            res = four_in(diag)
-            if res:
-                logger.debug(f'Diag : {res}')
-                break
+        if found is None:
+            found = find_four_in(min_four_diags(reduced_matrix))
 
-    return False
-
-
-def game_over():
-    ...
+    return found

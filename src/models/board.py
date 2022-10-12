@@ -1,5 +1,8 @@
 import tkinter as tk
+#import os
 from typing import Tuple
+
+#from playsound import playsound
 
 from src.logger import logger
 from src.models.token import Token
@@ -84,21 +87,27 @@ class Board(tk.Canvas):
                                  fill='white')
 
     def at_human_player_click(self, event) -> None:
-        col = event.x // self.box_size
-        player = game.PLAYERS[game.CURRENT_TURN]
+        if game.IS_PLAYING:
+            col = event.x // self.box_size
+            player = game.PLAYERS[game.CURRENT_TURN]
 
-        if isinstance(player, HumanPlayer):
-            insertion_ok = self.insert_token(player, col)
-            if insertion_ok:
-                self.switch_turn()
-
-        self.window.after(200, self.next_move)
+            if isinstance(player, HumanPlayer):
+                insertion_ok = self.insert_token(player, col)
+                if game.IS_PLAYING and game.TOKENS_NUMBER < self.rows_number * self.columns_number:
+                    if insertion_ok:
+                        self.switch_turn()
+                        self.window.after(200, self.next_move)
+                else:
+                    self.end_game()
 
     def next_move(self):
         player = game.PLAYERS[game.CURRENT_TURN]
         if isinstance(player, AIPlayer):
             self.insert_token(player, player.move())
-            self.switch_turn()
+            if game.IS_PLAYING and game.TOKENS_NUMBER < self.rows_number * self.columns_number:
+                self.switch_turn()
+            else:
+                self.end_game()
 
     def switch_turn(self):
         game.CURRENT_TURN = not game.CURRENT_TURN
@@ -120,6 +129,8 @@ class Board(tk.Canvas):
             _, _, _, _, center = self.box_vertices(box_index_x, box_index_y)
 
             token = Token(self, player)
+            #logger.error(f'{os.path.exists(os.path.abspath("token-sound.mp3"))}')
+            #playsound('../../ressources/token-sound.mp3')
             game.BOXES_MATRIX[box_index_y][box_index_x] = token.draw(center, self.token_radius)
 
             game.FILLED_BOXES[box_index_x].append(box_index_y)
@@ -128,11 +139,15 @@ class Board(tk.Canvas):
 
             inserted = True
 
-            if game.TOKENS_NUMBER >= 7:
-                game.find_four()
-
             logger.debug(f'{player.name} ({player.color}) move: '
                          f'column {box_index_x + 1} line {last_box_y}')
+
+            if game.TOKENS_NUMBER >= 7:
+                win_state = game.find_four()
+
+                if win_state is not None:
+                    game.IS_PLAYING = False
+                    logger.debug(f'Found: {win_state}')
 
         return inserted
 
@@ -143,3 +158,6 @@ class Board(tk.Canvas):
         }
         players[game.CURRENT_TURN].configure(background='green')
         players[not game.CURRENT_TURN].configure(background=self.window.default_bg_color)
+
+    def end_game(self):
+        logger.debug(f'{game.IS_PLAYING}, {game.TOKENS_NUMBER < self.rows_number * self.columns_number}')
