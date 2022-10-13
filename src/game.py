@@ -19,6 +19,10 @@ BOXES_MATRIX = []
 
 EMPTY = 2
 
+SOUNDS = {
+    'token': '',
+}
+
 MODE = {
     'player_1': 'Player 1',
     'player_2': 'AI',
@@ -29,14 +33,23 @@ MODE = {
 WIN_PATTERNS = ['0000', '1111']
 
 
-def find_four_in(matrix: List[List[int]]) -> Union[Tuple[int, str], None]:
+def get_color_from_identifier(widget_id: int, cnv) -> str:
+    if widget_id == EMPTY:
+        return str(EMPTY)
+    else:
+        return str(SETTINGS.token_colors.index(cnv.itemcget(widget_id, 'fill')))
+
+
+def find_four_in(matrix: List[List[int]], cnv) -> Union[Tuple[int, List[int]], None]:
     for seq in matrix:
-        joined_seq = ''.join(map(str, seq))
+        categorized_seq = map(lambda identifier: get_color_from_identifier(identifier, cnv), seq)
+        joined_seq = ''.join(categorized_seq)
 
         for pattern in WIN_PATTERNS:
             result = re.findall(pattern, joined_seq)
             if result:
-                return int(result[0][0]), joined_seq
+                win_index = joined_seq.index(result[0])
+                return int(result[0][0]), seq[win_index:win_index+4]
 
 
 def min_four_diags(matrix: List[List[int]]) -> List[List[int]]:
@@ -84,15 +97,15 @@ def min_four_diags(matrix: List[List[int]]) -> List[List[int]]:
     return diags
 
 
-def find_four() -> Union[Tuple[int, str], None]:
+def find_four(canvas) -> Union[Tuple[int, str], None]:
     reduced_matrix = list(filter(lambda r: any(map(lambda x: x != EMPTY, r)), BOXES_MATRIX))
 
-    found = find_four_in(reduced_matrix)
+    found = find_four_in(reduced_matrix, canvas)
 
     if found is None and len(reduced_matrix) >= 4:
-        found = find_four_in(utils.transpose(reduced_matrix))
+        found = find_four_in(utils.transpose(reduced_matrix), canvas)
 
         if found is None:
-            found = find_four_in(min_four_diags(reduced_matrix))
+            found = find_four_in(min_four_diags(reduced_matrix), canvas)
 
     return found

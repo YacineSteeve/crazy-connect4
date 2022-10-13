@@ -1,8 +1,7 @@
 import tkinter as tk
-#import os
 from typing import Tuple
 
-#from playsound import playsound
+from playsound import playsound
 
 from src.logger import logger
 from src.models.token import Token
@@ -19,6 +18,7 @@ class Board(tk.Canvas):
         self.border_thickness = game.SETTINGS.board_border_thickness
         self.columns_number = game.SETTINGS.board_columns_number
         self.rows_number = game.SETTINGS.board_rows_number
+        self.boxes = []
 
         size = self.size
         self.width = size[0]
@@ -73,18 +73,33 @@ class Board(tk.Canvas):
             for y in range(self.rows_number):
                 top_left_x, top_left_y, bottom_right_x, bottom_right_y, center = self.box_vertices(x, y)
 
-                self.create_rectangle(top_left_x,
-                                      top_left_y,
-                                      bottom_right_x,
-                                      bottom_right_y,
-                                      width=self.border_thickness // 2,
-                                      fill=self.color)
+                box = self.create_rectangle(top_left_x,
+                                            top_left_y,
+                                            bottom_right_x,
+                                            bottom_right_y,
+                                            width=self.border_thickness // 2,
+                                            fill=self.color)
+
+                self.boxes.append(box)
 
                 self.create_oval(center[0] - self.token_radius,
                                  center[1] - self.token_radius,
                                  center[0] + self.token_radius,
                                  center[1] + self.token_radius,
                                  fill='white')
+
+    def matching_box(self, token_id) -> int:
+        for box in self.boxes:
+            box_coords = self.coords(box)
+            token_coords = self.coords(token_id)
+
+            condition_1 = box_coords[0] < token_coords[0]
+            condition_2 = box_coords[1] < token_coords[1]
+            condition_3 = box_coords[2] > token_coords[2]
+            condition_4 = box_coords[3] > token_coords[3]
+
+            if condition_1 and condition_2 and condition_3 and condition_4:
+                return box
 
     def at_human_player_click(self, event) -> None:
         if game.IS_PLAYING:
@@ -129,9 +144,10 @@ class Board(tk.Canvas):
             _, _, _, _, center = self.box_vertices(box_index_x, box_index_y)
 
             token = Token(self, player)
-            #logger.error(f'{os.path.exists(os.path.abspath("token-sound.mp3"))}')
-            #playsound('../../ressources/token-sound.mp3')
+
             game.BOXES_MATRIX[box_index_y][box_index_x] = token.draw(center, self.token_radius)
+
+            playsound(game.SOUNDS['token'])
 
             game.FILLED_BOXES[box_index_x].append(box_index_y)
 
@@ -143,21 +159,27 @@ class Board(tk.Canvas):
                          f'column {box_index_x + 1} line {last_box_y}')
 
             if game.TOKENS_NUMBER >= 7:
-                win_state = game.find_four()
+                win_state = game.find_four(self)
 
                 if win_state is not None:
                     game.IS_PLAYING = False
-                    logger.debug(f'Found: {win_state}')
+                    self.turn_highlight(ended=True)
+                    for win_token in win_state[1]:
+                        self.itemconfigure(self.matching_box(win_token), fill='green')
 
         return inserted
 
-    def turn_highlight(self):
+    def turn_highlight(self, ended=False):
         players = {
             0: self.window.label_player_1,
             1: self.window.label_player_2
         }
-        players[game.CURRENT_TURN].configure(background='green')
         players[not game.CURRENT_TURN].configure(background=self.window.default_bg_color)
+
+        if not ended:
+            players[game.CURRENT_TURN].configure(background='green')
+        else:
+            players[game.CURRENT_TURN].configure(background=self.window.default_bg_color)
 
     def end_game(self):
         logger.debug(f'{game.IS_PLAYING}, {game.TOKENS_NUMBER < self.rows_number * self.columns_number}')

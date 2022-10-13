@@ -1,4 +1,5 @@
 import sys
+import os
 
 from src import config
 from src.logger import logger
@@ -51,5 +52,7 @@ if __name__ == '__main__':
     ]
 
     game.IS_PLAYING = True
+
+    game.SOUNDS['token'] = os.path.abspath('ressources/token-sound.mp3')
 
     window.run()
