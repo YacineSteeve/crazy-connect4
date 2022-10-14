@@ -59,15 +59,27 @@ class Window(tk.Tk):
         self.label_player_2.grid(row=2, column=0, columnspan=2, sticky='ew')
 
         self.start_button = tk.Button(self,
-                                      text='Start',
+                                      text='START',
                                       font=self.normal_font,
                                       background='green',
                                       foreground='white',
-                                      command=self.play)
+                                      command=self.start)
         self.start_button.grid(in_=self.frame,
                                row=3, column=0,
                                columnspan=2,
                                ipadx=int(self.width * 0.025))
+
+        self.retry_button = tk.Button(self,
+                                      text='RETRY',
+                                      font=self.normal_font,
+                                      background='green',
+                                      foreground='white',
+                                      command=self.retry)
+        self.retry_button.grid(in_=self.frame,
+                               row=3, column=0,
+                               columnspan=2,
+                               ipadx=int(self.width * 0.025))
+        self.retry_button.lower()
 
         self.exit_button = tk.Button(self,
                                      text='Exit',
@@ -78,7 +90,6 @@ class Window(tk.Tk):
         self.exit_button.grid(in_=self.frame,
                               row=4, column=0,
                               columnspan=2,
-                              sticky='e',
                               ipadx=int(self.width * 0.025))
         self.exit_button.lower()
 
@@ -117,11 +128,15 @@ class Window(tk.Tk):
 
         self.mainloop()
 
-    def play(self):
+    def start(self):
         self.start_button.lower()
+        self.retry_button.lift(self.frame)
         self.exit_button.lift(self.frame)
         self.board.turn_highlight()
         self.board.bind('<Button-1>', self.board.at_human_player_click)
+
+    def retry(self):
+        game.init(self)
 
     def on_exit(self, event=None) -> None:
         if messagebox.askyesno(title='Exit game', message='Are you sure you want to exit ?'):

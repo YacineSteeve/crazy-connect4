@@ -7,7 +7,7 @@ class RandomAI:
 
     def move(self) -> int:
 
-        column = utils.random_column()
+        column = utils.random_column(game.SETTINGS.board_columns_number)
 
         if len(game.FILLED_BOXES) == 0:
             return column
@@ -16,6 +16,6 @@ class RandomAI:
             return column
 
         while column in game.FILLED_BOXES and game.FILLED_BOXES[column][-1] == 0:
-            column = utils.random_column()
+            column = utils.random_column(game.SETTINGS.board_columns_number)
 
         return column

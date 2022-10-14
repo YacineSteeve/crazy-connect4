@@ -1,9 +1,13 @@
 import re
+import os
+from tkinter import Tk, Canvas
 from typing import Union, Tuple, List
 
-from src import utils
+from src import utils, config
 
-SETTINGS = None
+Matrix = List[List[int]]
+
+SETTINGS = config.Settings().save(log=False)
 
 PLAYERS = []
 
@@ -20,7 +24,7 @@ BOXES_MATRIX = []
 EMPTY = 2
 
 SOUNDS = {
-    'token': '',
+    'token': os.path.abspath('ressources/token-sound.mp3'),
 }
 
 MODE = {
@@ -33,14 +37,53 @@ MODE = {
 WIN_PATTERNS = ['0000', '1111']
 
 
-def get_color_from_identifier(widget_id: int, cnv) -> str:
+def init(window: Tk = None) -> None:
+    from src.models.window import Window
+    from src.models.player import HumanPlayer, AIPlayer
+    from src.models.ai import RandomAI
+
+    global CURRENT_TURN, TOKENS_NUMBER, IS_PLAYING, FILLED_BOXES, BOXES_MATRIX, PLAYERS
+
+    CURRENT_TURN = 0
+    TOKENS_NUMBER = 0
+    IS_PLAYING = True
+    FILLED_BOXES = {}
+    BOXES_MATRIX = [
+        [EMPTY for _ in range(SETTINGS.board_columns_number)]
+        for _ in range(SETTINGS.board_rows_number)
+    ]
+    
+    if window is not None:
+        window.destroy()
+
+    window = Window()
+
+    player_1 = HumanPlayer(player_name=MODE.get('player_1', 'Player 1'),
+                           color=SETTINGS.token_colors[MODE.get('player_color_id', 0)],
+                           window=window)
+
+    if MODE.get('player_2') == 'human':
+        player_2 = HumanPlayer(player_name=MODE.get('human_opponent_name', 'Player 2'),
+                               color=SETTINGS.token_colors[not MODE.get('player_color_id', 0)],
+                               window=window)
+    else:
+        player_2 = AIPlayer(ai=RandomAI(),
+                            color=SETTINGS.token_colors[not MODE.get('player_color_id', 0)],
+                            window=window)
+
+    PLAYERS = [player_1, player_2]
+
+    window.run()
+
+
+def get_color_from_identifier(widget_id: int, cnv: Canvas) -> str:
     if widget_id == EMPTY:
         return str(EMPTY)
     else:
         return str(SETTINGS.token_colors.index(cnv.itemcget(widget_id, 'fill')))
 
 
-def find_four_in(matrix: List[List[int]], cnv) -> Union[Tuple[int, List[int]], None]:
+def find_four_in(matrix: Matrix, cnv: Canvas) -> Union[Tuple[int, List[int]], None]:
     for seq in matrix:
         categorized_seq = map(lambda identifier: get_color_from_identifier(identifier, cnv), seq)
         joined_seq = ''.join(categorized_seq)
@@ -52,7 +95,7 @@ def find_four_in(matrix: List[List[int]], cnv) -> Union[Tuple[int, List[int]], N
                 return int(result[0][0]), seq[win_index:win_index+4]
 
 
-def min_four_diags(matrix: List[List[int]]) -> List[List[int]]:
+def min_four_diags(matrix: Matrix) -> Matrix:
     n, m = len(matrix), len(matrix[0])
     diags = []
 
@@ -97,7 +140,7 @@ def min_four_diags(matrix: List[List[int]]) -> List[List[int]]:
     return diags
 
 
-def find_four(canvas) -> Union[Tuple[int, str], None]:
+def find_four(canvas: Canvas) -> Union[Tuple[int, str], None]:
     reduced_matrix = list(filter(lambda r: any(map(lambda x: x != EMPTY, r)), BOXES_MATRIX))
 
     found = find_four_in(reduced_matrix, canvas)

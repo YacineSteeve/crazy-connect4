@@ -137,7 +137,7 @@ class GameModePopUp(tk.Tk):
 
             game.MODE = {
                 'player_1': self.player_name.get(),
-                'player_2': opponent.lower() if opponent != '-Choose opponent-' else 'ai',
+                'player_2': opponent if opponent != '-choose opponent-' else 'ai',
                 'human_opponent_name': self.opponent_name.get(),
                 'player_color_id': self.player_color.get()
             }

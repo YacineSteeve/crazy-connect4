@@ -1,5 +1,5 @@
 import tkinter as tk
-from typing import Tuple
+from typing import Tuple, Union
 
 from playsound import playsound
 
@@ -88,7 +88,7 @@ class Board(tk.Canvas):
                                  center[1] + self.token_radius,
                                  fill='white')
 
-    def matching_box(self, token_id) -> int:
+    def matching_box(self, token_id) -> Union[int, None]:
         for box in self.boxes:
             box_coords = self.coords(box)
             token_coords = self.coords(token_id)
@@ -108,21 +108,22 @@ class Board(tk.Canvas):
 
             if isinstance(player, HumanPlayer):
                 insertion_ok = self.insert_token(player, col)
-                if game.IS_PLAYING and game.TOKENS_NUMBER < self.rows_number * self.columns_number:
-                    if insertion_ok:
+                if game.TOKENS_NUMBER < self.rows_number * self.columns_number:
+                    if game.IS_PLAYING and insertion_ok:
                         self.switch_turn()
                         self.window.after(200, self.next_move)
                 else:
-                    self.end_game()
+                    logger.debug("Raw")
 
     def next_move(self):
         player = game.PLAYERS[game.CURRENT_TURN]
         if isinstance(player, AIPlayer):
             self.insert_token(player, player.move())
-            if game.IS_PLAYING and game.TOKENS_NUMBER < self.rows_number * self.columns_number:
-                self.switch_turn()
+            if game.TOKENS_NUMBER < self.rows_number * self.columns_number:
+                if game.IS_PLAYING:
+                    self.switch_turn()
             else:
-                self.end_game()
+                logger.debug("Raw")
 
     def switch_turn(self):
         game.CURRENT_TURN = not game.CURRENT_TURN
@@ -166,6 +167,7 @@ class Board(tk.Canvas):
                     self.turn_highlight(ended=True)
                     for win_token in win_state[1]:
                         self.itemconfigure(self.matching_box(win_token), fill='green')
+                    logger.debug(f'{game.PLAYERS[game.CURRENT_TURN].name} is the winner.')
 
         return inserted
 
@@ -180,6 +182,3 @@ class Board(tk.Canvas):
             players[game.CURRENT_TURN].configure(background='green')
         else:
             players[game.CURRENT_TURN].configure(background=self.window.default_bg_color)
-
-    def end_game(self):
-        logger.debug(f'{game.IS_PLAYING}, {game.TOKENS_NUMBER < self.rows_number * self.columns_number}')

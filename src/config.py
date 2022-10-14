@@ -1,7 +1,6 @@
 from typing import Tuple
 from dataclasses import dataclass, fields
 
-from src import game
 from src.logger import logger
 
 TITLE_POS_Y_SCALE_REL_TO_HEIGHT = 0.05
@@ -18,7 +17,7 @@ class SettingError(Exception):
     pass
 
 
-@dataclass(init=True)
+@dataclass(init=True, eq=True)
 class Settings:
     board_columns_number: int = 7
     board_rows_number: int = 6
@@ -35,7 +34,7 @@ class Settings:
     def get_number_of_boxes(self) -> int:
         return self.board_columns_number * self.board_rows_number
 
-    def save(self):
+    def save(self, log=True):
         wrong_setting = False
 
         for field in fields(self):
@@ -50,4 +49,8 @@ class Settings:
         if wrong_setting:
             logger.warning("Default settings will be used")
 
-        game.SETTINGS = self
+        if log:
+            logger.debug("Game settings initialised")
+            logger.info(f'{self}')
+
+        return self

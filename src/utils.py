@@ -1,11 +1,9 @@
 import random
 from typing import Tuple, List
 
-from src import game
 
-
-def random_column():
-    return random.randint(0, game.SETTINGS.board_columns_number - 1)
+def random_column(columns_number):
+    return random.randint(0, columns_number - 1)
 
 
 def middle(point_1: Tuple[int, int], point_2: Tuple[int, int]) -> Tuple[int, int]:

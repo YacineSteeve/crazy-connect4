@@ -37,42 +37,42 @@ class TestSettings:
         assert self.default_settings.get_number_of_boxes == \
                self.default_settings.board_columns_number * self.default_settings.board_rows_number
 
-    def test_wrong_board_size_type(self):
-        with pytest.raises(SystemExit) as test_exception_rows:
-            wrong_settings = config.Settings(board_rows_number=1.1)
+    def test_wrong_board_rows_number_type(self):
+        wrong_settings = config.Settings(board_rows_number=1.1)
+        assert wrong_settings != self.default_settings
+        assert self.default_settings == wrong_settings.save(log=False)
 
-        with pytest.raises(SystemExit) as test_exception_cols:
-            wrong_settings = config.Settings(board_columns_number="something")
-
-        assert test_exception_rows.type == SystemExit
-        assert test_exception_cols.type == SystemExit
+    def test_wrong_board_columns_number_type(self):
+        wrong_settings = config.Settings(board_columns_number="something")
+        assert wrong_settings != self.default_settings
+        assert self.default_settings == wrong_settings.save(log=False)
 
     def test_wrong_window_title_type(self):
-        with pytest.raises(SystemExit) as test_exception:
-            wrong_settings = config.Settings(window_title=4)
-        assert test_exception.type == SystemExit
+        wrong_settings = config.Settings(window_title=4)
+        assert wrong_settings != self.default_settings
+        assert self.default_settings == wrong_settings.save(log=False)
 
     def test_wrong_window_color_type(self):
-        with pytest.raises(SystemExit) as test_exception:
-            wrong_settings = config.Settings(window_title=9)
-        assert test_exception.type == SystemExit
+        wrong_settings = config.Settings(window_title=9)
+        assert wrong_settings != self.default_settings
+        assert self.default_settings == wrong_settings.save(log=False)
 
     def test_wrong_token_colors_type(self):
-        with pytest.raises(SystemExit) as test_exception:
-            wrong_settings = config.Settings(token_colors="color")
-        assert test_exception.type == SystemExit
+        wrong_settings = config.Settings(token_colors="color")
+        assert wrong_settings != self.default_settings
+        assert self.default_settings == wrong_settings.save(log=False)
 
     def test_wrong_board_color_type(self):
-        with pytest.raises(SystemExit) as test_exception:
-            wrong_settings = config.Settings(board_color=4)
-        assert test_exception.type == SystemExit
+        wrong_settings = config.Settings(board_color=4)
+        assert wrong_settings != self.default_settings
+        assert self.default_settings == wrong_settings.save(log=False)
 
     def test_wrong_board_border_thickness_type(self):
-        with pytest.raises(SystemExit) as test_exception:
-            wrong_settings = config.Settings(board_border_thickness="None")
-        assert test_exception.type == SystemExit
+        wrong_settings = config.Settings(board_border_thickness="None")
+        assert wrong_settings != self.default_settings
+        assert self.default_settings == wrong_settings.save(log=False)
 
     def test_wrong_font_family_type(self):
-        with pytest.raises(SystemExit) as test_exception:
-            wrong_settings = config.Settings(font_family=6)
-        assert test_exception.type == SystemExit
+        wrong_settings = config.Settings(font_family=6)
+        assert wrong_settings != self.default_settings
+        assert self.default_settings == wrong_settings.save(log=False)
