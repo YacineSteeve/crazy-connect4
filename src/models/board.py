@@ -108,12 +108,25 @@ class Board(tk.Canvas):
 
             if isinstance(player, HumanPlayer):
                 insertion_ok = self.insert_token(player, col)
-                if game.TOKENS_NUMBER < self.rows_number * self.columns_number:
-                    if game.IS_PLAYING and insertion_ok:
-                        self.switch_turn()
-                        self.window.after(200, self.next_move)
-                else:
-                    logger.debug("Raw")
+                if insertion_ok:
+                    if game.TOKENS_NUMBER < self.rows_number * self.columns_number:
+                        if game.IS_PLAYING:
+                            self.switch_turn()
+                            self.window.after(200, self.next_move)
+                        else:
+                            self.window.after(200, self.play_win_sound)
+                    else:
+                        self.window.after(200, self.play_draw_sound)
+                        logger.debug("Draw")
+
+    def play_win_sound(self):
+        playsound(game.SOUNDS['win'])
+
+    def play_loose_sound(self):
+        playsound(game.SOUNDS['loose'])
+
+    def play_draw_sound(self):
+        playsound(game.SOUNDS['draw'])
 
     def next_move(self):
         player = game.PLAYERS[game.CURRENT_TURN]
@@ -122,8 +135,11 @@ class Board(tk.Canvas):
             if game.TOKENS_NUMBER < self.rows_number * self.columns_number:
                 if game.IS_PLAYING:
                     self.switch_turn()
+                else:
+                    self.window.after(200, self.play_loose_sound)
             else:
-                logger.debug("Raw")
+                self.window.after(200, self.play_draw_sound)
+                logger.debug("Draw")
 
     def switch_turn(self):
         game.CURRENT_TURN = not game.CURRENT_TURN

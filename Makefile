@@ -15,12 +15,13 @@ run: init main.py
 	${PYTHON} main.py
 
 dev: main.py
-	clear; ${PYTHON} main.py
+	clear
+	${PYTHON} main.py
 
 clean:
 	rm -rf __pycache__
 	rm -rf ./.pytest_cache
-	rm -rf .coverage
+	rm .coverage
 
 test: tests src
 	pytest --cov=src --cov-report=html --cache-clear --verbosity=1

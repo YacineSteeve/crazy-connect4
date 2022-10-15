@@ -1,5 +1,5 @@
 import re
-import os
+from os import path
 from tkinter import Tk, Canvas
 from typing import Union, Tuple, List
 
@@ -24,7 +24,10 @@ BOXES_MATRIX = []
 EMPTY = 2
 
 SOUNDS = {
-    'token': os.path.abspath('ressources/token-sound.mp3'),
+    'token': path.abspath('ressources/token-sound.mp3'),
+    'win': path.abspath('ressources/win-sound.mp3'),
+    'loose': path.abspath('ressources/loose-sound.mp3'),
+    'draw': path.abspath('ressources/draw-sound.mp3')
 }
 
 MODE = {
@@ -76,16 +79,16 @@ def init(window: Tk = None) -> None:
     window.run()
 
 
-def get_color_from_identifier(widget_id: int, cnv: Canvas) -> str:
+def get_color_from_identifier(widget_id: int, cnv: Canvas, normalize=False) -> int:
     if widget_id == EMPTY:
-        return str(EMPTY)
+        return EMPTY if not normalize else -1
     else:
-        return str(SETTINGS.token_colors.index(cnv.itemcget(widget_id, 'fill')))
+        return SETTINGS.token_colors.index(cnv.itemcget(widget_id, 'fill'))
 
 
 def find_four_in(matrix: Matrix, cnv: Canvas) -> Union[Tuple[int, List[int]], None]:
     for seq in matrix:
-        categorized_seq = map(lambda identifier: get_color_from_identifier(identifier, cnv), seq)
+        categorized_seq = map(lambda identifier: str(get_color_from_identifier(identifier, cnv)), seq)
         joined_seq = ''.join(categorized_seq)
 
         for pattern in WIN_PATTERNS:

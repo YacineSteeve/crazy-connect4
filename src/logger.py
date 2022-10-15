@@ -1,8 +1,10 @@
 import logging
 import os
+import socket
 
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
-LOG_FILE = os.path.join(ROOT_DIR, 'logs.log')
+USER_INFO = f'{os.getlogin()}.{socket.gethostbyname(socket.gethostname())}'
+LOG_FILE = os.path.join(ROOT_DIR, f'{USER_INFO}.log')
 
 
 class CustomFormatter(logging.Formatter):
@@ -28,10 +30,15 @@ class CustomFormatter(logging.Formatter):
             log_format = self.FORMAT
 
         # Truncate the pathname from the root directory
-        if 'pathname' in record.__dict__.keys() and len(record.pathname) >= len(ROOT_DIR):
+        if 'pathname' in record.__dict__.keys() and ROOT_DIR in record.pathname:
             record.pathname = record.pathname[len(ROOT_DIR) + 1:]
 
         return logging.Formatter(log_format, self.TIME_FORMAT).format(record)
+
+
+class LogFilter(logging.Filter):
+    def filter(self, record):
+        return all(map(lambda keyword: keyword not in record.name, ['botocore', 'urllib', 's3transfer']))
 
 
 class CustomLogger(logging.Logger):
@@ -39,16 +46,18 @@ class CustomLogger(logging.Logger):
         super().__init__(name, logging.DEBUG)
 
         console_handler = logging.StreamHandler()
-        # file_handler = logging.FileHandler(LOG_FILE, encoding='utf-8')
+        file_handler = logging.FileHandler(LOG_FILE, encoding='utf-8')
 
         console_formatter = CustomFormatter(colored=True)
-        # file_formatter = CustomFormatter(colored=False)
+        file_formatter = CustomFormatter(colored=False)
 
         console_handler.setFormatter(console_formatter)
-        # file_handler.setFormatter(file_formatter)
+        file_handler.setFormatter(file_formatter)
+
+        self.addFilter(LogFilter())
 
         self.addHandler(console_handler)
-        # self.addHandler(file_handler)
+        self.addHandler(file_handler)
 
 
 logging.setLoggerClass(CustomLogger)

@@ -2,3 +2,5 @@
 venv/
 *.log
 htmlcov/
+.log
+.env
