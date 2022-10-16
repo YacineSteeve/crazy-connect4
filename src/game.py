@@ -19,6 +19,8 @@ IS_PLAYING = False
 
 FILLED_BOXES = {}
 
+MOVES = []
+
 BOXES_MATRIX = []
 
 EMPTY = 2
@@ -84,6 +86,15 @@ def get_color_from_identifier(widget_id: int, cnv: Canvas, normalize=False) -> i
         return EMPTY if not normalize else -1
     else:
         return SETTINGS.token_colors.index(cnv.itemcget(widget_id, 'fill'))
+
+
+def save_game_state() -> None:
+    players = ['A', 'B']
+    with open('games.csv', 'a', encoding='utf-8') as file:
+        moves = MOVES + [-1 for _ in range(42 - len(MOVES))]
+        line = ','.join(map(str, moves))
+        line += ',' + players[CURRENT_TURN] + '\n'
+        file.write(line)
 
 
 def find_four_in(matrix: Matrix, cnv: Canvas) -> Union[Tuple[int, List[int]], None]:

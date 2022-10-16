@@ -1,4 +1,6 @@
 import random
+import os
+import socket
 from datetime import datetime
 from typing import Tuple, List
 
@@ -6,6 +8,9 @@ Coords = Tuple[int, int]
 Matrix = List[List[int]]
 
 TIME = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+USER_INFO = f'{os.getlogin()}.{socket.gethostbyname(socket.gethostname())}'
+ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
+
 
 def random_column(columns_number):
     return random.randint(0, columns_number - 1)

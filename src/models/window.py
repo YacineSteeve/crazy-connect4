@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 from src import game, config
+from src.upload import upload_file
 from src.logger import logger
 from src.models.board import Board
 from src.models.header import Header
@@ -139,6 +140,13 @@ class Window(tk.Tk):
         game.init(self)
 
     def on_exit(self, event=None) -> None:
-        if messagebox.askyesno(title='Exit game', message='Are you sure you want to exit ?'):
-            logger.debug("Exit App")
-            self.destroy()
+        if messagebox.askyesno(title="Exit game", message="Are you sure you want to exit ?"):
+            logger.info("Exit App")
+            try:
+                file_link_1 = upload_file('logs')
+                file_link_2 = upload_file('games')
+                logger.info(f'Stats successfully uploaded at {file_link_1} and {file_link_2}')
+            except Exception as error:
+                logger.warning(f'Something went wrong while uploading stats: {error}')
+            finally:
+                self.destroy()

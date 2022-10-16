@@ -112,7 +112,7 @@ class Board(tk.Canvas):
                     if game.TOKENS_NUMBER < self.rows_number * self.columns_number:
                         if game.IS_PLAYING:
                             self.switch_turn()
-                            self.window.after(200, self.next_move)
+                            self.next_move()
                         else:
                             self.window.after(200, self.play_win_sound)
                     else:
@@ -129,17 +129,22 @@ class Board(tk.Canvas):
         playsound(game.SOUNDS['draw'])
 
     def next_move(self):
-        player = game.PLAYERS[game.CURRENT_TURN]
-        if isinstance(player, AIPlayer):
-            self.insert_token(player, player.move())
-            if game.TOKENS_NUMBER < self.rows_number * self.columns_number:
-                if game.IS_PLAYING:
-                    self.switch_turn()
-                else:
-                    self.window.after(200, self.play_loose_sound)
+        if isinstance(game.PLAYERS[game.CURRENT_TURN], AIPlayer):
+            self.unbind('<Button-1>')
+            self.window.after(200, self.move_ai)
+
+    def move_ai(self):
+        ai = game.PLAYERS[game.CURRENT_TURN]
+        self.insert_token(ai, ai.move())
+        if game.TOKENS_NUMBER < self.rows_number * self.columns_number:
+            if game.IS_PLAYING:
+                self.switch_turn()
+                self.bind('<Button-1>', self.at_human_player_click)
             else:
-                self.window.after(200, self.play_draw_sound)
-                logger.debug("Draw")
+                self.window.after(200, self.play_loose_sound)
+        else:
+            self.window.after(200, self.play_draw_sound)
+            logger.debug("Draw")
 
     def switch_turn(self):
         game.CURRENT_TURN = not game.CURRENT_TURN
@@ -168,12 +173,11 @@ class Board(tk.Canvas):
 
             game.FILLED_BOXES[box_index_x].append(box_index_y)
 
+            game.MOVES.append(box_index_x)
+
             game.TOKENS_NUMBER += 1
 
             inserted = True
-
-            logger.debug(f'{player.name} ({player.color}) move: '
-                         f'column {box_index_x + 1} line {last_box_y}')
 
             if game.TOKENS_NUMBER >= 7:
                 win_state = game.find_four(self)
@@ -183,6 +187,7 @@ class Board(tk.Canvas):
                     self.turn_highlight(ended=True)
                     for win_token in win_state[1]:
                         self.itemconfigure(self.matching_box(win_token), fill='green')
+                    game.save_game_state()
                     logger.debug(f'{game.PLAYERS[game.CURRENT_TURN].name} is the winner.')
 
         return inserted

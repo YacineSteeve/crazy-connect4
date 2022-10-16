@@ -1,9 +1,8 @@
 import logging
 import os
-import socket
 
-ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
-USER_INFO = f'{os.getlogin()}.{socket.gethostbyname(socket.gethostname())}'
+from src.utils import ROOT_DIR, USER_INFO
+
 LOG_FILE = os.path.join(ROOT_DIR, f'{USER_INFO}.log')
 
 

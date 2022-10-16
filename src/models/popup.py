@@ -3,9 +3,8 @@ import tkinter as tk
 from tkinter import ttk, font
 
 from src.models.header import Header
-from src.logger import logger, LOG_FILE, USER_INFO
-from src.network import upload_to_aws
-from src import game, config, utils
+from src.logger import logger
+from src import game, config
 
 
 class GameModePopUp(tk.Tk):
@@ -163,10 +162,5 @@ class GameModePopUp(tk.Tk):
 
     def on_exit(self, event=None) -> None:
         self.destroy()
-        try:
-            uploaded = upload_to_aws(LOG_FILE, 'cc4bucket', f'{USER_INFO}_{utils.TIME}')
-        except NameError as e:
-            logger.exception(f'Uploading failed because of bad {e.name}')
-        finally:
-            logger.debug("Exit App")
-            sys.exit()
+        logger.info("Exit App")
+        sys.exit()
