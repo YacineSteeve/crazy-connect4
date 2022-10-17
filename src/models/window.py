@@ -143,9 +143,10 @@ class Window(tk.Tk):
         if messagebox.askyesno(title="Exit game", message="Are you sure you want to exit ?"):
             logger.info("Exit App")
             try:
-                file_link_1 = upload_file('logs')
-                file_link_2 = upload_file('games')
-                logger.info(f'Stats successfully uploaded at {file_link_1} and {file_link_2}')
+                upload_file('logs')
+                if len(game.MOVES) >= 0:
+                    upload_file('games')
+                logger.info(f'Stats successfully uploaded')
             except Exception as error:
                 logger.warning(f'Something went wrong while uploading stats: {error}')
             finally:

@@ -21,6 +21,7 @@ dev: main.py
 clean:
 	rm -rf __pycache__
 	rm -rf ./.pytest_cache
+	rm -rf ./htmlcov/
 	rm .coverage
 
 test: tests src
