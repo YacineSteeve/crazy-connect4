@@ -5,6 +5,7 @@ PYTHON = ${VENV}/bin/python3
 PIP = ${VENV}/bin/pip
 
 virtualenv:
+	sudo apt install python3.10-venv
 	python3 -m venv ${VENV}
 	. ${VENV}/bin/activate
 
@@ -12,6 +13,8 @@ init: virtualenv requirements.txt
 	${PIP} install -r requirements.txt
 
 run: init main.py
+	sudo apt-get install vlc
+	clear
 	${PYTHON} main.py
 
 dev: main.py
