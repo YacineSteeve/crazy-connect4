@@ -131,7 +131,7 @@ class Board(tk.Canvas):
     def next_move(self):
         if isinstance(game.PLAYERS[game.CURRENT_TURN], AIPlayer):
             self.unbind('<Button-1>')
-            self.window.after(200, self.move_ai)
+            self.window.after(2000, self.move_ai)
 
     def move_ai(self):
         ai = game.PLAYERS[game.CURRENT_TURN]

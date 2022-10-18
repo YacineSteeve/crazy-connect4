@@ -3,6 +3,8 @@ from os import path
 from tkinter import Tk, Canvas
 from typing import Union, Tuple, List
 
+from vlc import MediaPlayer
+
 from src import utils, config
 
 Matrix = List[List[int]]
@@ -29,7 +31,8 @@ SOUNDS = {
     'token': path.abspath('ressources/token-sound.mp3'),
     'win': path.abspath('ressources/win-sound.mp3'),
     'loose': path.abspath('ressources/loose-sound.mp3'),
-    'draw': path.abspath('ressources/draw-sound.mp3')
+    'draw': path.abspath('ressources/draw-sound.mp3'),
+    'background': MediaPlayer(path.abspath('ressources/background-music.wav')),
 }
 
 MODE = {

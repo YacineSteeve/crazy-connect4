@@ -52,14 +52,14 @@ class GameModePopUp(tk.Tk):
         ask_player_name = tk.Label(self.frame, text="Your name :", background=self.settings.window_color)
         ask_player_name.grid(row=1, column=0, sticky='w', padx=self.grid_pad_x, pady=self.grid_pad_x)
 
-        player_name_entry = tk.Entry(self.frame, textvariable=self.player_name)
-        player_name_entry.grid(row=1, column=1, sticky='e', pady=self.grid_pad_x)
-        player_name_entry.focus_set()
+        self.player_name_entry = tk.Entry(self.frame, textvariable=self.player_name)
+        self.player_name_entry.grid(row=1, column=1, sticky='e', pady=self.grid_pad_x)
+        self.player_name_entry.focus_set()
 
         ask_opponent = tk.Label(self.frame, text="Play against :", background=self.settings.window_color)
         ask_opponent.grid(row=2, column=0, sticky='w', padx=self.grid_pad_x, pady=self.grid_pad_x)
 
-        entry_width = player_name_entry.cget('width')
+        entry_width = self.player_name_entry.cget('width')
 
         choose_opponent = ttk.Combobox(self.frame,
                                        textvariable=self.opponent,
@@ -129,6 +129,8 @@ class GameModePopUp(tk.Tk):
 
     def show(self) -> None:
         logger.info("Pending for game mode")
+        game.SOUNDS['background'].play()
+        game.SOUNDS['background'].audio_set_volume(65)
         self.mainloop()
 
     def save_data(self, event=None) -> None:
@@ -146,6 +148,8 @@ class GameModePopUp(tk.Tk):
             logger.info(f'Game config: {game.MODE}')
 
             self.on_save()
+        else:
+            self.player_name_entry.focus_set()
 
     def on_opponent_choice(self, event=None) -> None:
         if self.opponent.get() == 'Human':
@@ -161,6 +165,7 @@ class GameModePopUp(tk.Tk):
         self.destroy()
 
     def on_exit(self, event=None) -> None:
+        game.SOUNDS['background'].stop()
         self.destroy()
         logger.info("Exit App")
         sys.exit()

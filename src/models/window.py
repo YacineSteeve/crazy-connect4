@@ -141,6 +141,7 @@ class Window(tk.Tk):
 
     def on_exit(self, event=None) -> None:
         if messagebox.askyesno(title="Exit game", message="Are you sure you want to exit ?"):
+            messagebox.showinfo(title="Closing...", message="It will take a few seconds...")
             logger.info("Exit App")
             try:
                 upload_file('logs')
@@ -150,4 +151,5 @@ class Window(tk.Tk):
             except Exception as error:
                 logger.warning(f'Something went wrong while uploading stats: {error}')
             finally:
+                game.SOUNDS['background'].stop()
                 self.destroy()
