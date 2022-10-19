@@ -1,25 +1,4 @@
-.PHONY: virtualenv init run dev clean test
-
-VENV = venv
-PYTHON = ${VENV}/bin/python3
-PIP = ${VENV}/bin/pip
-
-virtualenv:
-	sudo apt install python3.10-venv
-	python3 -m venv ${VENV}
-	. ${VENV}/bin/activate
-
-init: virtualenv requirements.txt
-	${PIP} install -r requirements.txt
-
-run: init main.py
-	sudo apt-get install vlc
-	clear
-	${PYTHON} main.py
-
-dev: main.py
-	clear
-	${PYTHON} main.py
+.PHONY: clean test
 
 clean:
 	rm -rf __pycache__

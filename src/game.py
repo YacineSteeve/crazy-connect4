@@ -3,9 +3,28 @@ from os import path
 from tkinter import Tk, Canvas
 from typing import Union, Tuple, List
 
-from vlc import MediaPlayer
-
 from src import utils, config
+
+with open(f'{utils.ROOT_DIR}/.env', 'r', encoding='utf-8') as env:
+    play_music = env.readline().strip().split('=')[1]
+
+if play_music == 'True':
+    from vlc import MediaPlayer
+    background_music = MediaPlayer(path.abspath('ressources/background-music.wav'))
+else:
+    class FakeMedia:
+        def __init__(self):
+            ...
+
+        def play(self):
+            return
+
+        def stop(self):
+            return
+
+        def audio_set_volume(*args):
+            return
+    background_music = FakeMedia()
 
 Matrix = List[List[int]]
 
@@ -32,7 +51,7 @@ SOUNDS = {
     'win': path.abspath('ressources/win-sound.mp3'),
     'loose': path.abspath('ressources/loose-sound.mp3'),
     'draw': path.abspath('ressources/draw-sound.mp3'),
-    'background': MediaPlayer(path.abspath('ressources/background-music.wav')),
+    'background': background_music,
 }
 
 MODE = {
