@@ -29,7 +29,7 @@ The main features of this implementation are:
     ./run
     ```
 
-> &#9888;&#65039; After exiting the game, your can **open it again just by running the same command** `./run`.
+> &#9888;&#65039; After exiting the game, you can **open it again just by running the same command** `./run`.
 
 --- 
 
