@@ -1,4 +1,6 @@
-# Crazy Connect 4
+<h1 align="center">Crazy Connect 4</h1>
+
+![Repo-size](https://img.shields.io/github/repo-size/YacineSteeve/crazy-connect4)
 
 Crazy Connect 4 is a two-player game based on [Connect 4](https://en.wikipedia.org/wiki/Connect_Four).
 
@@ -19,6 +21,9 @@ The main features of this implementation are:
     git clone https://github.com/YacineSteeve/crazy-connect4
     ```
 
+> Or download the [zip file](https://github.com/YacineSteeve/crazy-connect4/archive/refs/heads/master.zip) 
+> if you don't have `git` installed and rename the folder `crazy-connect4` .
+
 2. Move to the **project directory**:
     ```commandline
     cd crazy-connect4
@@ -26,10 +31,10 @@ The main features of this implementation are:
    
 3. Then **install** and **launch** the game by simply execute:
     ```commandline
-    ./run
+    ./run.sh
     ```
 
-> &#9888;&#65039; After exiting the game, you can **open it again just by running the same command** `./run`.
+> &#9888;&#65039; After exiting the game, you can **open it again just by running the same command** `./run.sh`.
 
 --- 
 

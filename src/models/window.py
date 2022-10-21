@@ -147,10 +147,10 @@ class Window(tk.Tk):
 
     def on_exit(self, event=None) -> None:
         if messagebox.askyesno(title="Exit game", message="Are you sure you want to exit ?"):
-            messagebox.showinfo(title="Closing...", message="It will take a few seconds...")
             logger.info("Exit App")
             try:
                 if sys.platform in ['linux', 'darwin']:
+                    messagebox.showinfo(title="Closing...", message="It will take a few seconds...")
                     upload_file('logs')
                     if len(game.MOVES) >= 0:
                         upload_file('games')

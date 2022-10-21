@@ -1,7 +1,5 @@
 #!/usr/bin/sh
 
-# shellcheck disable=SC2046
-
 if [ $(python3 --version | grep -c '3.10') -eq 1 ];
 then
   if [ -d venv ];
@@ -26,8 +24,8 @@ then
         rm -rf __pycache__;
         rm -rf ./.pytest_cache;
         rm .coverage;
-        printf '\n\t\033[0;32m Crazy Connect 4 has been installed successfully !'
-        printf 'Thank for your trust and enjoy ! \033[0m\n\n';
+        printf '\n\t\033[0;32m Crazy Connect 4 have been installed successfully !'
+        printf 'Thanks for your trust and enjoy ! \033[0m\n\n';
         venv/bin/python3 main.py;
       fi
     fi

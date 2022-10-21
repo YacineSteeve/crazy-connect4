@@ -21,7 +21,7 @@ if __name__ == '__main__':
     popup = GameModePopUp()
     popup.show()
 
-    with open('games.csv', 'w', encoding='utf-8') as file:
+    with open('games.csv', 'w') as file:
         head = ','.join(f'Move{i}' for i in range(1, settings.get_number_of_boxes + 1))
         head += ',Winner\n'
         file.write(head)

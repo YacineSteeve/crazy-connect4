@@ -5,7 +5,7 @@ from typing import Union, Tuple, List
 
 from src import utils, config
 
-with open(f'{utils.ROOT_DIR}/.env', 'r', encoding='utf-8') as env:
+with open(f'{utils.ROOT_DIR}/.env', 'r') as env:
     play_music = env.readline().strip().split('=')[1]
 
 if play_music == 'True':
@@ -114,7 +114,7 @@ def get_color_from_identifier(widget_id: int, cnv: Canvas, normalize=False) -> i
 
 def save_game_state() -> None:
     players = ['A', 'B']
-    with open('games.csv', 'a', encoding='utf-8') as file:
+    with open('games.csv', 'a') as file:
         moves = MOVES + [-1 for _ in range(42 - len(MOVES))]
         line = ','.join(map(str, moves))
         line += ',' + players[CURRENT_TURN] + '\n'
