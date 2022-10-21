@@ -23,6 +23,10 @@ class GameModePopUp(tk.Tk):
         self.title("Game mode")
         self.configure(background=self.settings.window_color)
         self.geometry(f'{self.width}x{self.height}')
+        if sys.platform in ['linux', 'darwin']:
+            self.iconphoto(False, tk.PhotoImage(game.ICON))
+        elif sys.platform in ['win32', 'cygwin']:
+            self.iconbitmap(game.ICON)
         self.resizable(False, False)
         self.protocol('WM_DELETE_WINDOW', self.on_exit)
         self.bind('<Escape>', self.on_exit)

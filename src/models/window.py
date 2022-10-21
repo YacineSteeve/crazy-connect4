@@ -1,3 +1,5 @@
+import sys
+
 import tkinter as tk
 from tkinter import messagebox
 
@@ -25,6 +27,10 @@ class Window(tk.Tk):
         self.title(self.settings.window_title)
         self.configure(background=self.settings.window_color)
         self.geometry(f'{self.width}x{self.height}')
+        if sys.platform.startswith('linux') or sys.platform == 'darwin':
+            self.iconphoto(False, tk.PhotoImage(game.ICON))
+        elif sys.platform in ['win32', 'cygwin']:
+            self.iconbitmap(game.ICON)
         self.resizable(False, False)
         self.protocol('WM_DELETE_WINDOW', self.on_exit)
         self.bind('<Escape>', self.on_exit)
@@ -144,10 +150,11 @@ class Window(tk.Tk):
             messagebox.showinfo(title="Closing...", message="It will take a few seconds...")
             logger.info("Exit App")
             try:
-                upload_file('logs')
-                if len(game.MOVES) >= 0:
-                    upload_file('games')
-                logger.info(f'Stats successfully uploaded')
+                if sys.platform in ['linux', 'darwin']:
+                    upload_file('logs')
+                    if len(game.MOVES) >= 0:
+                        upload_file('games')
+                    logger.info(f'Stats successfully uploaded')
             except Exception as error:
                 logger.warning(f'Something went wrong while uploading stats: {error}')
             finally:

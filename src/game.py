@@ -46,6 +46,8 @@ BOXES_MATRIX = []
 
 EMPTY = 2
 
+ICON = path.abspath('ressources/window-icon.ico')
+
 SOUNDS = {
     'token': path.abspath('ressources/token-sound.mp3'),
     'win': path.abspath('ressources/win-sound.mp3'),
