@@ -5,7 +5,7 @@ from typing import Union, Tuple, List
 
 from src import utils, config
 
-with open(f'{utils.ROOT_DIR}/.env', 'r') as env:
+with open(path.abspath(f'{utils.ROOT_DIR}/.env'), 'r') as env:
     play_music = env.readline().strip().split('=')[1]
 
 if play_music == 'True':
