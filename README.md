@@ -1,6 +1,7 @@
 <h1 align="center">Crazy Connect 4</h1>
 
-![Repo-size](https://img.shields.io/github/repo-size/YacineSteeve/crazy-connect4)
+![Repo-size](https://img.shields.io/github/repo-size/YacineSteeve/crazy-connect4?style=flat-square)
+![wakatime](https://wakatime.com/badge/user/c9625662-7df7-4bc4-b9f0-a23294301053/project/9c92a071-c5b4-4832-adf4-53439b843a79.svg?style=flat-square)
 
 Crazy Connect 4 is a two-player game based on [Connect 4](https://en.wikipedia.org/wiki/Connect_Four).
 
@@ -14,45 +15,37 @@ The main features of this implementation are:
 
 ## Setup and play
 
-### Linux / MacOS
-
-1. Open your terminal and **clone** the repository in a location of your choice by running
+1. Open your terminal and **clone** the repository in a location of your choice by running:
     ```commandline
     git clone https://github.com/YacineSteeve/crazy-connect4
     ```
 
-> Or download the [zip file](https://github.com/YacineSteeve/crazy-connect4/archive/refs/heads/master.zip) 
-> if you don't have `git` installed and rename the folder `crazy-connect4` .
+    > Or download the [zip file](https://github.com/YacineSteeve/crazy-connect4/archive/refs/heads/master.zip) 
+   > if you don't have `git` installed, then extract and rename the folder into `crazy-connect4` .
 
 2. Move to the **project directory**:
-    ```commandline
+    ```bash
     cd crazy-connect4
     ```
    
-3. Then **install** and **launch** the game by simply execute:
-    ```commandline
+3. Then **install** and **launch** the game:
+    
+    * ### Linux / MacOS
+    Simply execute this command in your terminal:
+    ```bash
     ./run.sh
     ```
 
-> &#9888;&#65039; After exiting the game, you can **open it again just by running the same command** `./run.sh`.
+    * ### Windows
+        * Using the "geek way", and assuming you are using Windows PowerShell, execute:
+            ```powershell
+            .\run.ps1
+            ```
+        * Or click on `cc4.exe` in the project directory.
 
---- 
 
-### Windows
-
-*(Automation coming soon)*
-
-If you want to install it manually, follow the steps below:
-
-- Make sure that the Python version installed on your computer is minimum **`3.10`**
-- Create and activate a virtual environment named `venv`
-- Install the dependencies from `requirements.txt` using `pip`
-- Install VLC Media Player (optional)
-- Create a file named `.env` in the project's root directory
-- Add this exact line in the file : 
-    * if VLC is installed: `VLC_IS_OK=True`
-    * else: `VLC_IS_OK=False`
-- Run the script `main.py` 
+   > &#9888;&#65039; After exiting the game, you can **open it again just by running the same command** `./run.sh` ,
+   > `.\run.ps1` , or `cc4.exe` according to your OS.
 
 ## Acknowledgement
 
