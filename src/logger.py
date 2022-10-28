@@ -37,7 +37,7 @@ class CustomFormatter(logging.Formatter):
 
 class LogFilter(logging.Filter):
     def filter(self, record):
-        return all(map(lambda keyword: keyword not in record.name, ['botocore', 'urllib', 's3transfer']))
+        return all(map(lambda keyword: keyword not in record.name, ['botocore', 'urllib', 's3transfer', 'playsound']))
 
 
 class CustomLogger(logging.Logger):
