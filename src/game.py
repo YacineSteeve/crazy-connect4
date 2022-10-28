@@ -22,7 +22,7 @@ else:
         def stop(self):
             return
 
-        def audio_set_volume(*args):
+        def audio_set_volume(self, *args):
             return
     background_music = FakeMedia()
 
